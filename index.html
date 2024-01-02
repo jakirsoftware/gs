@@ -33,10 +33,6 @@
         <input type="text" name="sp"><br>
         <label for="text">Whereabout:</label><br>
         <input type="text" name="wh"><br>
-        <label for="text">Entry Time:</label><br>
-        <input type="text" name="tm"><br>
-        <label for="text">Product ID:</label><br>
-        <input type="text" name="pid"><br>
         <input type="submit" id="sub">        
     </form>
 
@@ -46,7 +42,7 @@
             e.preventDefault();
             document.querySelector("#sub").value = "Submiting..";
             let data = new FormData(form);
-            fetch('https://script.google.com/macros/s/AKfycbxCzp0xvpdX0Y26XPwV0UjTdpjg03xC-uzcIuagUJsM76ded7rRYX1_t_1H5p7gfaFb7g/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxTsXIPOcWG4o0GHEm4EoZ6wfqg_pJaQKSCQ2di6g_RNBeYDNksWrU71uIZfnJtofpEiw/exec', {
                     method: "POST",
                     body: data
                 })
