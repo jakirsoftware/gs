@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <script src="Scripts/Global.js"></script>
+      <script src="Scripts/jquery.js"></script>   
+      <link rel="stylesheet" type="text/css" href="Styles/Design.css">
+   </head>
+   <body>
+      <input type="time" id="theTime">
+      <script>
+         $(document).ready( function() {
+          var current = new Date();
+          var minute = (now.getMinutes() + 1);               
+          var seconds = now.getSeconds();
+          if(minute < 10) 
+              minute = "0" + minute;
+          if(seconds < 10) 
+              seconds = "0" + seconds;
+          var today = now.getFullYear() + '-' + minute + '-' + seconds;
+          $('#theTime').val(today);
+         });
+      </script>
+   </body>
+</html>
