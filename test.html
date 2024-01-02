@@ -1,0 +1,61 @@
+                
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry</title>
+</head>
+ 
+<body>
+    
+    <form>
+        <label for="text">Product Name:</label><br>
+        <input type="text" name="pn" required><br>
+        <label for="text">Unit:</label><br>
+        <input type="text" name="un" required><br>
+        <!---- <select name="un">
+            <option value="Bag">Bag</option>
+            <option value="KG">KG</option>
+            <option value="PCs">PCs</option>
+        </select><br>  -->
+        <label for="text">Category:</label><br>
+        <input type="text" name="ct" required><br>
+        <label for="text">SubCategory:</label><br>
+        <input type="text" name="sc"><br>
+        <label for="text">Brand:</label><br>
+        <input type="text" name="br"><br>
+        <label for="text">Opening Stock:</label><br>
+        <input type="number" name="os" step="any"><br>
+        <label for="text">Purchase Price:</label><br>
+        <input type="number" name="pp" step="any" required><br>
+        <label for="text">Selling Price:</label><br>
+        <input type="number" name="sp" step="any"><br>
+        <label for="text">Whereabout:</label><br>
+        <input type="text" name="wh"><br>
+        <input type="submit" id="sub"><br><a id="msg"></a>
+        <a href="index.html">Click</a>       
+    </form>
+
+    <script>
+        let form = document.querySelector("form");
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.querySelector("#sub").value = "Submiting..";
+            let data = new FormData(form);
+            fetch('https://script.google.com/macros/s/AKfycbw6AVdLmBMqDjawNoDDNCpCv3J9k2qeB2AnZdfVakuRDboRUu_kfPE9K1vB1iCYxfxGzw/exec', {
+                    method: "POST",
+                    body: data
+                })
+                .then(res => res.text())
+                .then(data => {
+                    document.querySelector("#msg").innerHTML = data;
+                    document.querySelector("#sub").value = "Submit"                
+                });
+        })
+    </script>
+</body>
+ 
+</html>
+            
