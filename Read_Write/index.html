@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<!-- Define the document type as HTML -->
+<html lang="en">
+<!-- Start of HTML document, with "en" set as the default language -->
+<head>
+    <!-- Start of the header section -->
+    <meta charset="UTF-8">
+    <!-- Set the character encoding to UTF-8 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Set the compatibility mode for Internet Explorer to the latest version -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Set the viewport for the page to the device's width and initial zoom level -->
+    <title>Document</title>
+    <!-- Set the title of the page to "Document" -->
+    <style>
+        /* Define some styles for the elements with the "edit" and "delete" classes */
+        .edit,.delete{
+            background-color:red;
+            cursor: pointer;
+            color:white;
+            padding: 3px;
+            border-radius:5px;
+        }
+        /* Define some styles for the element with the "update" class */
+        .update{
+            display: none;
+        }
+    </style>
+    <!-- End of the header section -->
+</head>
+<!-- End of the header section -->
+<body>
+<!-- Start of the body section -->
+    <form>
+        <!-- Start of the form element -->
+        <input type="text"class="todo"placeholder='Todo..'>
+        <!-- Create a text input field with the "todo" class and a placeholder text -->
+        <button class="add"type="button" onclick="addData()">Add Todo</button>
+        <!-- Create a button with the "add" and "type" classes and an onclick event handler that calls the addData() function -->
+        <button class="update"type="button">Update Todo</button>
+        <!-- Create a button with the "update" and "type" classes -->
+    </form>
+    <!-- End of the form element -->
+    <table>
+        <!-- Start of the table element -->
+        <thead>
+            <!-- Start of the table header section -->
+            <tr>
+                <!-- Start of the table row -->
+                <th>Id</th>
+                <!-- Create a table cell with the text "Id" -->
+                <th>Todo</th>
+                <!-- Create a table cell with the text "Todo" -->
+                <th>Update</th>
+                <!-- Create a table cell with the text "Update" -->
+                <th>Delete</th>
+                <!-- Create a table cell with the text "Delete" -->
+            </tr>
+            <!-- End of the table row -->
+        </thead>
+        <!-- End of the table header section -->
+        <tbody></tbody>
+        <!-- Start of the table body section -->
+    </table>
+    <!-- End of the table element -->
+    <script>
+        // Start of the script section
+        let api = "YOUR_API_URL_HERE";
+        // Set the API URL as a variable
+        let form = document.querySelector("form");
+        // Find the form element and set it as a variable
+        let add = document.querySelector(".add");
+        // Find the element with the "add" class and set it as a variable
+        let update = document.querySelector(".update");
+        // Find the element with the "update" class and set it as a variable
+        let tbody = document.querySelector("tbody");
+        // Find the table body element and set it as a variable
+        function addData() {
+    // Change the text content of the add button to indicate that data is being added
+    add.textContent="Adding.."
+    // Create an object with the todo value obtained from the form
+    let obj = {
+        todo:form[0].value
+    }
+    // Use fetch to make a POST request to the API endpoint with the JSON stringified obj as the request body
+    fetch(api,{
+        method:"POST",
+        body:JSON.stringify(obj)
+    })
+    // Parse the response text from the server and call readData() function to update the UI with the new data
+    .then(res => res.text())
+    .then(data => {
+        readData()
+        // Show an alert with the response message from the server
+        alert(data)
+        // Reset the form and change the text content of the add button back to its original state
+        add.textContent="Add Todo"
+        form.reset();
+    });
+}
+
+function readData(){
+    // Use fetch to make a GET request to the API endpoint and parse the JSON response
+    fetch(api)
+    .then(res=>res.json())
+    .then(data=>{
+        // Extract the todo data from the response
+        let todo = data.todo;
+        // Map each todo item to a string of table row HTML
+        let trtd = todo.map(each=>{
+            return `
+            <tr>
+            <td class="id">${each[0]}</td>    
+            <td class="data">${each[1]}</td>
+            <td class="edit"onclick="updateCall(this,${each[0]})">Edit</td>    
+            <td class="delete"onclick="delData(${each[0]})">Delete</td>    
+            </tr>
+            
+            `
+        })
+        // Join the array of table row HTML strings and set the innerHTML of the tbody element to it
+        tbody.innerHTML=trtd.join("");
+    })
+}
+// Call the readData() function on page load to populate the table with data from the API
+readData()
+
+function delData(id){
+    // Use fetch to make a GET request to the API endpoint to delete the todo item with the given id
+    fetch(api+`?del=true&id=${id}`)
+    .then(res=>res.text())
+    .then(data=>{
+        // Update the UI by calling readData() function and show an alert with the response message from the server
+        readData()
+        alert(data)
+    })
+}
+
+function updateCall(elm,id){
+    // Hide the add button and show the update button
+    add.style.display="none"
+    update.style.display="unset"
+    // Get the current todo value from the data cell of the current row and set the form value to it
+    let todo = elm.parentElement.querySelector(".data").textContent;
+    form[0].value=todo;
+    // Set the onclick attribute of the update button to call updateData() function with the current todo item id as an argument
+    update.setAttribute("onclick",`updateData(${id})`)
+}
+function updateData(id){
+    update.textContent="Updating.."
+    // send a fetch request to update the todo data
+    fetch(api+`?update=true&id=${id}&data=${form[0].value}`)
+    .then(res=>res.text())
+    .then(data=>{
+        // read the updated data
+        readData()
+        alert(data)
+        // reset the form input and update button text
+        form.reset()
+        update.textContent="Update Todo"
+        // show the add button and hide the update button
+        add.style.display="unset"
+        update.style.display="none"
+    })
+}
+// This function is called when the user clicks the "Update" button in the table. It updates the todo data by sending a fetch request to the server with the updated todo text and the id of the todo to be updated. Once the server responds with a success message, the function calls readData() to update the table, displays an alert message, and resets the form input and update button text. Finally, it shows the "Add" button and hides the "Update" button.
+
+
