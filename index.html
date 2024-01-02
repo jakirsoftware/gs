@@ -1,0 +1,49 @@
+                
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry</title>
+</head>
+ 
+<body>
+    <h1 id="msg"></h1>
+    <form>
+        <label for="text">Contact Name:</label><br>
+        <input type="text" name="cn"><br><br>
+        <label for="text">Contact Type:</label><br>
+        <select name="ct">
+            <option value="Customer">Customer</option>
+            <option value="Supplier">Supplier</option>
+            <option value="Both">Both</option>
+            <option value="Lend">Lend</option>
+          </select><br><br>
+        <label for="text">Mobile Number:</label><br>
+        <input type="tel" name="mn"><br><br>
+        <label for="text">Address:</label><br>
+        <input type="text" name="adr"><br><br>
+        <input type="submit" id="sub">
+    </form>
+    <script>
+        let form = document.querySelector("form");
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.querySelector("#sub").value = "Submiting..";
+            let data = new FormData(form);
+            fetch('https://script.google.com/macros/s/AKfycbw1RU8w-HfaBx_5auTtqFdYF0CUSq9_ZmtyarA3y3XGkPHzHSrRTdjTFykAlzJalzKC/exec', {
+                    method: "POST",
+                    body: data
+                })
+                .then(res => res.text())
+                .then(data => {
+                    document.querySelector("#msg").innerHTML = data;
+                    document.querySelector("#sub").value = "Submit"                
+                });
+        })
+    </script>
+</body>
+ 
+</html>
+            
